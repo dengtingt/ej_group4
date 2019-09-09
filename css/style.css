@@ -2,7 +2,7 @@ html,body,.container {
 	height: 100%;
 }
 .container {
-
+	font-size: 14px;
 }
 .container > .left {
 	width: 220px;
@@ -13,7 +13,7 @@ html,body,.container {
 }
 .container > .left a {
 	color: #ffffff;
-	font-size: 14px;
+	font-size: 16px;
 }
 .left > .title {
 	font-size: 20px;
@@ -50,6 +50,7 @@ html,body,.container {
 	height: 100%;
 	padding: 1em;
 	box-sizing: border-box;
+	overflow-y: auto;
 }
 .container > .right >.content >.mb_nav{
 	border-bottom: 1px solid #ccc;

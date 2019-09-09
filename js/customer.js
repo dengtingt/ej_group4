@@ -1,4 +1,4 @@
-var $ = {
+var myJquery = {
 	// get请求
 	get : function(url,handler){
 		// 1. 实例化xhr对象
