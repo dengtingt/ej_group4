@@ -1,6 +1,6 @@
 <style>
 	.btns {
-		margin: 15px 5px 15px;
+		margin: 10px 5px 10px;
 	}
 	.btn {
 		display: inline-block;
@@ -10,9 +10,17 @@
 		color: #333;
 		cursor :pointer;
 	}
+	.forms {
+		margin-bottom: 5px;
+	}
 	.forms td {
 		line-height: 1.5em;
 	}
+
+	.hidden {
+		display: none;
+	}
+
 
 	table.table {
 		box-sizing: border-box;
@@ -30,6 +38,9 @@
 		background-color: #ededed;
 	}
 
+	.btns div.current {
+		background-color: #ededed;
+	}
 	.none {
 		display: none;
 	}
@@ -42,7 +53,7 @@ var baseURL = "http://134.175.154.93:6677";
 // 初始化数据
 function initData(){
 	var url = "/customer/findCustomerAll"
-	$.get(baseURL+url,function(response){
+	myJquery.get(baseURL+url,function(response){
 		$("#customer_tbl > tbody").empty();
 		response.data.forEach(function(item){
 			var newTr = $(`<tr>
@@ -51,9 +62,9 @@ function initData(){
 				<td>`+item.status+`</td>
 				<td>`+item.telephone+`</td>
 				<td>
-					<a class="btn_del" href="javascript:void(0)">删除</a>
-					<a class="btn_upd" href="javascript:void(0)">修改</a>
-					<a class="btn_info" href="javascript:void(0)">详情</a>
+					<a class="btn_del" href="javascript:void(0)" style="color:#40b6ff;">删除</a>
+					<a class="btn_upd" href="javascript:void(0)" style="color:#40b6ff;">修改</a>
+					<a class="btn_info" href="javascript:void(0)" style="color:#40b6ff;">详情</a>
 				</td>
 			</tr>`);
 			$("#customer_tbl > tbody").append(newTr);
@@ -72,7 +83,7 @@ $(function(){
 				var id = $(this).parents("tr").find("input").val()
 				var url = baseURL+"/customer/deleteCustomerById";
 				var data = "id="+id;
-				$.post(url,data,function(result){
+				myJquery.post(url,data,function(result){
 					alert(result.message);
 					initData();
 				})
@@ -91,11 +102,11 @@ $(function(){
 				break;
 
 			case "btn_info":
-				var id = $(this).parents("tr").find("input").val();
-				alert(id);
+				$(this).parents(".customer").load("./pages/info.html");
 				break;
 		}
 	})
+
 })
 
 // 为保存按钮绑定事件处理函数
@@ -116,7 +127,7 @@ $(function(){
 			data = "realname="+realname+"&telephone="+telephone;
 		}
 
-		$.post(url,data,function(result){
+		myJquery.post(url,data,function(result){
 			alert(result.message);
 			initData();
 		})
@@ -132,6 +143,27 @@ $(function(){
 		$(".forms form tbody tr input[type=text]").val('');
 		initData();
 	})
+
+	// 鼠标放上去当前按钮添加背景色
+	$(".btns").on("mouseover","div",function(){
+		$(this).addClass('current')
+	})
+	// 鼠标移开当前按钮失去背景色
+	$(".btns").on("mouseout",'div',function(){
+		$(this).removeClass('current')
+	})
+})
+
+$(function(){
+	// 鼠标放上去当前行添加背景色
+	$("table.table tbody").on("mouseover",'tr',function(){
+			$(this).addClass('current')
+	})
+	// 鼠标移开当前行失去背景色
+	$("table.table tbody").on("mouseout",'tr',function(){
+			$(this).removeClass('current')
+	})
+	
 })
 
 

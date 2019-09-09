@@ -1,0 +1,150 @@
+<style>
+	ul,ol,p,h1,h2,h3 {
+		margin: 0;
+		padding: 0;
+	}
+	ul li{
+		list-style: none;
+		padding: 0;
+	}
+	a {
+		text-decoration: none;
+		color: #40b6ff;
+		font-size: 14px;
+	}
+	.info {
+		margin: 20px;
+	}
+	.header {
+		border-bottom: 1px solid #ededed;
+		margin: 0 0 20px;
+		box-sizing: border-box;
+	}
+	ul::after{
+		display: block;
+		content: "";
+		clear: both;
+	}
+	ul li {
+		font-size: 14px;
+		float: left;
+		line-height: 3em;
+		margin-right: 50px;
+		box-sizing: border-box;
+		padding: 0 20px;
+	}
+	ul a{
+		position: absolute;
+		right: 0;
+		line-height: 3em;
+		box-sizing: border-box;
+		padding: 0 50px;
+	}
+
+	ul li.current {
+		color: #40b6ff;
+		box-sizing: border-box;
+		border-bottom: 2px solid #40b6ff;
+	}
+
+	.content {
+		border: 1px solid #ededed;
+		width: 300px;
+		height: 350px;
+	}
+	.content #person div:first-child {
+		border-bottom: 1px solid #ededed;
+		padding: 20px;
+		box-sizing: border-box;
+	}
+	.content #person div:last-child {
+		padding: 20px;
+		box-sizing: border-box;
+		font-size: 14px;
+	}
+
+	.content #person {
+		display: none;
+	}
+	.content #address {
+		display: none;
+	}
+	.content #order {
+		display: none;
+	}
+
+	.content #person.page {
+		display: block;
+	}
+	.content #address.page {
+		display: block;
+	}
+	.content #order.page {
+		display: block;
+	}
+
+
+	
+</style>
+
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script>
+	$(function(){
+	// 为导航添加事件
+	$(".header ul").on("click","li",function(){
+		$("ul > li").removeClass("current");
+		$(this).addClass("current");
+		switch(this.className){
+			case "person current":
+				$(this).parents(".info").find("#person").addClass("page");
+				$(this).parents(".info").find("#address").removeClass("page");
+				$(this).parents(".info").find("#order").removeClass("page");
+				break;
+
+			case "address current":
+				$(this).parents(".info").find("#address").addClass("page");
+				$(this).parents(".info").find("#person").removeClass("page");
+				$(this).parents(".info").find("#order").removeClass("page");
+				break;
+
+			case "order current":
+				$(this).parents(".info").find("#order").addClass("page");
+				$(this).parents(".info").find("#person").removeClass("page");
+				$(this).parents(".info").find("#address").removeClass("page");
+				break;
+		}
+	})
+
+	// 模拟点击第一个li
+	$("ul > li:first-child").trigger("click");
+	
+});
+</script>
+
+
+<div class="info">
+	<div class="header">
+		<ul>
+			<li class="person">个人信息</li>
+			<li class="address">地址信息</li>
+			<li class="order">订单信息</li>
+			<a href="javascript:void(0)">返回</a>
+		</ul>
+	</div>
+	<div class="content">
+		<div id="person">
+			<div>员工照片</div>
+			<div>
+				<img src="" alt="">
+				<p>姓名：</p>
+				<p>电话：</p>
+			</div>
+		</div>
+		<div id="address" >
+			地址
+		</div>
+		<div id="order">
+			订单
+		</div>
+	</div>
+</div>
