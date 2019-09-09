@@ -2,7 +2,7 @@ html,body,.container {
 	height: 100%;
 }
 .container {
-
+	font-size: 14px;
 }
 .container > .left {
 	width: 220px;
@@ -13,28 +13,34 @@ html,body,.container {
 }
 .container > .left a {
 	color: #ffffff;
-	font-size: 14px;
+	font-size: 16px;
 }
 .left > .title {
 	font-size: 20px;
 	font-weight: bold;
 	text-align: center;
-	line-height: 4em;
+	line-height: 4.5em;
 	border-bottom: 1px solid #ededed
 }
-.left >ul.left_nav {
-
+.left >ul.left_nav li .iconfont{
+	font-size: 18px;
+	margin-right: 8px;
 }
 .left >ul.left_nav > li{
 	text-align: center;
-	line-height: 3em;
-	border-bottom: 1px solid #ededed
+	line-height: 3.5em;
+	border-bottom: 1px solid #666;
 }
+
+
 .left >ul.left_nav > li.current{
 	background-color: #ededed;
 }
 .left >ul.left_nav > li.current a{
-	color: #333;
+	color: #666;
+}
+.left >ul.left_nav > li.current i{
+	color: #666;
 }
 
 .container > .right {
@@ -50,14 +56,17 @@ html,body,.container {
 	height: 100%;
 	padding: 1em;
 	box-sizing: border-box;
+	overflow-y: auto;
 }
 .container > .right >.content >.mb_nav{
 	border-bottom: 1px solid #ccc;
-	line-height: 2em;
-	margin-bottom: .5em;
+	line-height: 3em;
+	margin-bottom: 1em;
 }
 
-
+.mouseover {
+	background-color: #666;
+}
 
 
 
