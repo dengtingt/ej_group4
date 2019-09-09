@@ -9,6 +9,7 @@ $(function(){
 
 	// 模拟点击第一个li
 	$("ul.left_nav > li:first-child").trigger("click");
+<<<<<<< HEAD
 
 
 	// 鼠标放上去当前按钮添加背景色
@@ -19,6 +20,8 @@ $(function(){
 	$("ul.left_nav").on("mouseout",'li',function(){
 		$(this).removeClass('mouseover')
 	})
+=======
+>>>>>>> bebb9503f28f7d56cccfb688fd55d82b13fd0ea8
 	
 });
 

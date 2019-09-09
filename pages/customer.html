@@ -38,14 +38,20 @@
 		background-color: #ededed;
 	}
 
+	.btns div.current {
+		background-color: #ededed;
+	}
 	.none {
 		display: none;
 	}
 </style>
 <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
 <script type="text/javascript" src="../js/customer.js"></script>
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> bebb9503f28f7d56cccfb688fd55d82b13fd0ea8
 <script>
 
 var baseURL = "http://134.175.154.93:6677";
@@ -63,7 +69,15 @@ function initData(){
 				<td>
 					<a class="btn_del" href="javascript:void(0)" style="color:#40b6ff;">删除</a>
 					<a class="btn_upd" href="javascript:void(0)" style="color:#40b6ff;">修改</a>
+<<<<<<< HEAD
 					<a class="btn_info" href="./info.html" style="color:#40b6ff;">详情</a>
+=======
+<<<<<<< HEAD
+					<a class="btn_info" href="./info.html" style="color:#40b6ff;">详情</a>
+=======
+					<a class="btn_info" href="javascript:void(0)" style="color:#40b6ff;">详情</a>
+>>>>>>> b4b7bfd98493e7789dac5fb9a7f2accfa67be759
+>>>>>>> bebb9503f28f7d56cccfb688fd55d82b13fd0ea8
 				</td>
 			</tr>`);
 			$("#customer_tbl > tbody").append(newTr);
@@ -100,7 +114,17 @@ $(function(){
 				document.querySelector("input[name=id]").value = id;
 				break;
 
+<<<<<<< HEAD
 
+=======
+<<<<<<< HEAD
+
+=======
+			case "btn_info":
+				$(this).parents(".customer").load("./pages/info.html");
+				break;
+>>>>>>> b4b7bfd98493e7789dac5fb9a7f2accfa67be759
+>>>>>>> bebb9503f28f7d56cccfb688fd55d82b13fd0ea8
 		}
 	})
 
