@@ -47,15 +47,22 @@
 		border-bottom: 2px solid #40b6ff;
 	}
 
+<<<<<<< HEAD
 	.content #person {
+=======
+	.content {
+>>>>>>> b4b7bfd98493e7789dac5fb9a7f2accfa67be759
 		border: 1px solid #ededed;
 		width: 300px;
 		height: 350px;
 	}
+<<<<<<< HEAD
 	.content #address td {
 		
 	}
 
+=======
+>>>>>>> b4b7bfd98493e7789dac5fb9a7f2accfa67be759
 	.content #person div:first-child {
 		border-bottom: 1px solid #ededed;
 		padding: 20px;
@@ -65,6 +72,7 @@
 		padding: 20px;
 		box-sizing: border-box;
 		font-size: 14px;
+<<<<<<< HEAD
 		line-height: 2.5em;
 	}
 	.content #person div:last-child img {
@@ -73,6 +81,8 @@
 		border-radius: 50%;
 		background-color: #ededed;
 		margin-bottom: 20px;
+=======
+>>>>>>> b4b7bfd98493e7789dac5fb9a7f2accfa67be759
 	}
 
 	.content #person {
@@ -102,6 +112,7 @@
 <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
 <script>
 	$(function(){
+<<<<<<< HEAD
 		// 为导航添加事件
 		$(".header ul").on("click","li",function(){
 			$("ul > li").removeClass("current");
@@ -132,6 +143,37 @@
 
 
 
+=======
+	// 为导航添加事件
+	$(".header ul").on("click","li",function(){
+		$("ul > li").removeClass("current");
+		$(this).addClass("current");
+		switch(this.className){
+			case "person current":
+				$(this).parents(".info").find("#person").addClass("page");
+				$(this).parents(".info").find("#address").removeClass("page");
+				$(this).parents(".info").find("#order").removeClass("page");
+				break;
+
+			case "address current":
+				$(this).parents(".info").find("#address").addClass("page");
+				$(this).parents(".info").find("#person").removeClass("page");
+				$(this).parents(".info").find("#order").removeClass("page");
+				break;
+
+			case "order current":
+				$(this).parents(".info").find("#order").addClass("page");
+				$(this).parents(".info").find("#person").removeClass("page");
+				$(this).parents(".info").find("#address").removeClass("page");
+				break;
+		}
+	})
+
+	// 模拟点击第一个li
+	$("ul > li:first-child").trigger("click");
+	
+});
+>>>>>>> b4b7bfd98493e7789dac5fb9a7f2accfa67be759
 </script>
 
 
@@ -141,7 +183,11 @@
 			<li class="person">个人信息</li>
 			<li class="address">地址信息</li>
 			<li class="order">订单信息</li>
+<<<<<<< HEAD
 			<a href="./customer.html">返回</a>
+=======
+			<a href="javascript:void(0)">返回</a>
+>>>>>>> b4b7bfd98493e7789dac5fb9a7f2accfa67be759
 		</ul>
 	</div>
 	<div class="content">
@@ -154,6 +200,7 @@
 			</div>
 		</div>
 		<div id="address" >
+<<<<<<< HEAD
 			<table>
 				<tr>
 					<th>省份</th>
@@ -165,6 +212,9 @@
 					
 				</tr>
 			</table>
+=======
+			地址
+>>>>>>> b4b7bfd98493e7789dac5fb9a7f2accfa67be759
 		</div>
 		<div id="order">
 			订单
