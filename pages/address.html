@@ -1,0 +1,444 @@
+<style>
+	.btns {
+		margin: 10px 5px 10px;
+	}
+	.btn {
+		display: inline-block;
+		padding: .3em 1.2em;
+		border-radius: 3px;
+		border:1px solid #ccc;
+		color: #333;
+		cursor :pointer;
+	}
+	/*删除成功弹出框*/
+	#mySuccessAlert{
+		width: 200px;
+		position: absolute;
+		right: 5%;
+		top: 8.5%;
+		z-index: 100;
+	}
+	/*删除失败弹出框*/
+	#myWarnAlert{
+		width: 250px;
+		position: absolute;
+		right: 5%;
+		top: 8.5%;
+		z-index: 100;
+	}
+
+	table.table {
+		box-sizing: border-box;
+		width: 100%;
+		border-collapse: collapse;
+	}
+	table.table td ,
+	table.table th {
+		border: 1px solid #ccc;
+		text-align: center;
+	}
+
+	.current {
+		background-color: #ECF5FF;
+	}
+</style>
+<script>
+	// ======== 提前声明的代码
+	var baseURL = "http://134.175.100.63:6677";
+
+	// 初始化数据
+	function loadData(){
+		// 在每次追加数据之前，先清空table
+		$('.table tbody').empty();
+		var url = baseURL+'/address/findAll';
+		$.get(url,function(result){
+			result.data.forEach(function(item){
+				var newTr = $(`
+					<tr>
+				      	<td><input type="checkbox" value="`+item.id+`"></td>
+				      	<td>`+item.province+`</td>
+				      	<td>`+item.city+`</td>
+					    <td>`+item.area+`</td>
+					    <td>`+item.address+`</td>
+					    <td>`+item.telephone+`</td>
+					    <td>`+item.customerId+`</td>
+				      	<td>
+							<a class="btn_del" href="javascript:void(0)" style="color:#40b6ff;margin-right:10px;">删除</a>
+							<a class="btn_upd" href="javascript:void(0)" style="color:#40b6ff;">修改</a>
+				      	</td>
+				    </tr>
+				`);
+				// 将生成的newTr追加到tbody上
+				$('.table tbody').append(newTr);
+			})
+		});
+	}
+
+
+	// 关闭模态框
+	function closeAddressModal(){
+		$("#addressModal").modal("hide");
+	}
+
+	// 查询所有顾客id，放入搜索下拉框中
+	// 在页面加载的时候执行该函数
+	function searchCustomerId(){
+		// 设置顾客的findAll请求地址
+		var url_findCustomerId = baseURL+'/customer/findAll';
+		$.get(url_findCustomerId,function(result){
+			// 将结果遍历，拿到id
+			result.data.forEach(function(item){
+				// 新创建节点，并追加到select中
+				/*
+				*第一个item.id放在value中，是为了根据顾客id查询的时候可以获取到此option的值
+				*第二个item.id放在option中间是为了显示
+				*/
+				var newOption = $(`
+					<option value="`+item.id+`">`+item.id+`</option>
+				`);
+				// 将顾客id追加到搜索下拉框中
+				$('#serach_customerId').append(newOption);
+			})
+		});
+	}
+
+	// 查询所有顾客id，放入模态框的下拉框中
+	// 在点击模态框显示的时候调用该函数
+	function addCustomerId(){
+		// 设置顾客的findAll请求地址
+		var url_findCustomerId = baseURL+'/customer/findAll';
+		$.get(url_findCustomerId,function(result){
+			// 将结果遍历，拿到id
+			result.data.forEach(function(item){
+				// 新创建节点，并追加到select中
+				/*
+				*第一个item.id放在value中，是为了根据顾客id查询的时候可以获取到此option的值
+				*第二个item.id放在option中间是为了显示
+				*/
+				var newOption = $(`
+					<option value="`+item.id+`">`+item.id+`</option>
+				`);
+				// 将顾客id追加到模态框的下拉框中
+				$('#input_customerId').append(newOption);
+			})
+		});
+	}
+
+	// 为保存按钮添加事件处理函数
+	function submitAddress(){
+		// 1.获取参数
+		var id = $("#address_form input[name=id]").val();
+		var province = $('#input_province').val();
+		var city = $('#input_city').val();
+		var area = $('#input_area').val();
+		var address = $('#input_address').val();
+		var telephone = $('#input_telephone').val();
+		var customerId = $('#input_customerId').val();
+		// 2. ajax
+		var url = baseURL+"/address/saveOrUpdate"
+		if(id){
+			// id存在，即修改
+			var data = {
+				id:id,
+				province:province,
+				city:city,
+				area:area,
+				address:address,
+				telephone:telephone,
+				customerId:customerId
+			}	
+		}else{
+			// id不存在，即添加
+			var data = {
+				province:province,
+				city:city,
+				area:area,
+				address:address,
+				telephone:telephone,
+				customerId:customerId
+			}	
+		}
+		$.post(url,data,function(result){
+			if(result.status === 200){
+				closeAddressModal();
+				loadData();
+			} else {
+				alert(result.message);
+			}
+		});
+		$('#addressModal').modal('hide');
+	}
+
+
+	// =========== 文档加载后执行
+	$(function(){
+		// 加载所有数据
+		loadData();
+		// 加载所有顾客id
+		searchCustomerId();
+
+
+		// 为批量删除绑定事件处理函数
+		$('#btn_batch_del').click(function(){
+			var url_batchDel = baseURL+'/address/batchDelete';
+			var ids = $(':checkbox:checked').map(function(index,item){
+				return $(item).val();
+			}).toArray();
+			var data = '';
+			for(index in ids){
+				if(index == 0){
+					data += 'ids='+ids[index]
+				}else{
+					data +='&ids='+ids[index]
+				}
+			}
+			$.post(url_batchDel,data,function(result){
+				if(result.status == 200){
+					alert("删除成功");
+					loadData();
+				} else{
+					alert(result.message);
+				}
+			})
+		})
+
+
+		// 为修改 / 删除按钮绑定事件处理函数
+		$('.table tbody').on('click','a',function(){
+			switch(this.className){
+
+				// 修改
+				case 'btn_upd':
+					// 打开模态框
+				 	$('#addressModal').modal('show');
+				 	// 获取当前行的值并放入模态框（不能在此处就发送请求）
+					var id = $(this).parents('tr').find('td').find('input').val();
+				 	var province = $(this).parents('tr').find('td:nth-child(2)').text();
+				 	var city = $(this).parents('tr').find('td:nth-child(3)').text();
+				 	var area = $(this).parents('tr').find('td:nth-child(4)').text();
+				 	var address = $(this).parents('tr').find('td:nth-child(5)').text();
+				 	var telephone = $(this).parents('tr').find('td:nth-child(6)').text();
+				 	var customerId = $(this).parents('tr').find('td:nth-child(7)').text();
+				 	$('#address_form input[name=id]').val(id);
+				 	$('#input_province').val(province);
+				 	$('#input_city').val(city);
+				 	$('#input_area').val(area);
+				 	$('#input_address').val(address);
+				 	$('#input_telephone').val(telephone);
+				 	$('#input_customerId').val(customerId);
+					break;
+
+				// 删除
+				case 'btn_del':
+				 	var url = baseURL+'/address/deleteById';
+					var id = $(this).parents("tr").find("input").val();
+					var data = {
+						id:id
+					}
+					$.get(url,data,function(result){
+						if(result.status === 200){
+							alert("删除成功");
+							loadData();
+						}else{
+							alert(result.message);
+						}
+					})
+					break;
+			}	
+
+		})
+
+
+		// 根据顾客id查询地址信息
+		$('#serach_customerId').on('click','option',function(){
+			// console.log($(this).val());
+			// 将当前点击的option的值赋值给id
+			var id = $(this).val();
+			var url_searchAddress = baseURL+'/address/findByCustomerId';
+			var data = {
+				id:id
+			};
+			$.get(url_searchAddress,data,function(result){
+				// 根据顾客id查询地址信息时，需要将原先表格中的数据清空，再追加根据顾客id新查询到的数据
+				$('.table tbody').empty();
+				result.data.forEach(function(item){
+					var newSearchTr = $(`
+						<tr>
+					      <td><input type="checkbox" value="`+item.id+`"></td>
+					      <td>`+item.province+`</td>
+					      <td>`+item.city+`</td>
+					      <td>`+item.area+`</td>
+					      <td>`+item.address+`</td>
+					      <td>`+item.telephone+`</td>
+					      <td>`+item.customerId+`</td>
+					      <td>
+							<i class='iconfont icon-edit' id='edit'></i>
+							<i class='iconfont icon-shanchu' id='del'></i>
+					      </td>
+					    </tr>
+					`);
+					$('.table tbody').append(newSearchTr);
+				});
+			});
+		})
+
+		// 还原搜索
+		$('#btn_findAll').click(function(){
+			// 点击按钮重新加载数据
+			loadData();
+		});
+
+
+		// 1.显示模态框
+		$('#btn_add_address').click(function(){
+			$('#addressModal').modal('show');
+			$("#address_form input[name=id]").val('');
+			// 执行函数，获取所有顾客id
+			$('#input_customerId').empty();
+			addCustomerId();
+		})
+		// 2. 监听模态框的关闭
+		$('#addressModal').on('hidden.bs.modal',function(e){
+			$(this).find("form")[0].reset();
+		});
+		// 3. 监听模态框的打开
+		$('#addressModal').on('show.bs.modal',function(e){
+			// 初始化表单中的栏目下拉菜单
+			addCustomerId();
+		});
+
+		// 鼠标放上去当前按钮添加背景色
+		$(".btns").on("mouseover","div",function(){
+			$(this).addClass('current')
+		})
+		// 鼠标移开当前按钮失去背景色
+		$(".btns").on("mouseout",'div',function(){
+			$(this).removeClass('current')
+		})		
+
+
+		// 鼠标放上去当前行添加背景色
+		$("table.table tbody").on("mouseover",'tr',function(){
+			$(this).addClass('current')
+		})
+		// 鼠标移开当前行失去背景色
+		$("table.table tbody").on("mouseout",'tr',function(){
+			$(this).removeClass('current')
+		})
+		
+
+	});
+</script>
+
+<!-- 容器 -->
+<div class="address">
+	<!-- 按钮 -->
+	<div class="btns">
+		<div class="btn" id="btn_add_address">添加</div>
+		<div class="btn" id="btn_batch_del">批量删除</div>
+	</div>
+	<!-- /按钮 -->
+	<!-- 表格 -->
+	<table class="table" id="address_tbl">
+		<thead>
+			<tr>
+				<th><input type="checkbox"></th>
+				<th>省份</th>
+				<th>市</th>
+				<th>地区</th>
+				<th>地址</th>
+				<th>电话</th>
+				<th>顾客id</th>
+				<th>操作</th>
+			</tr>
+		</thead>
+		<tbody>	
+
+		</tbody>
+	</table>
+	<!-- /表格 -->
+</div>
+<!-- /容器 -->
+
+<!-- 模态框 -->
+<div class="modal fade" id="addressModal" tabindex="-1">
+  	<div class="modal-dialog modal-lg" role="document">
+    	<div class="modal-content">
+      		<div class="modal-header">
+        		<h5 class="modal-title" id="exampleModalLabel">添加地址信息</h5>
+        		<button type="button" class="close" onclick="closeAddressModal()">
+          			<span>&times;</span>
+        		</button>
+      		</div>
+      		<div class="modal-body">
+  				<!-- 表单 -->
+				<form action="/register" id="address_form">
+					<input type="hidden" name="id">
+					<!-- 省份 -->
+					<div class="form-group row">
+			    		<div class="col-2 text-right">
+			    			<label for="input_realname">省份：</label>
+			    		</div>
+					    <div class="col-9">
+					    	<input type="text" class="form-control" id="input_province" placeholder="请输入省份">
+					    </div>
+					</div>
+					<!-- 城市 -->
+					<div class="form-group row">
+					  	<div class="col-2 text-right">
+					  		<label for="input_city">城市：</label>
+					  	</div>
+					    <div class="col-9">
+					    	<input type="text" class="form-control" id="input_city" placeholder="请输入城市">
+					    </div>
+					</div>
+					<!-- 地区 -->
+					<div class="form-group row">
+					  	<di class="col-2 text-right">
+					  		<label for="input_area">地区：</label>
+					  	</di>
+					  	<div class="col-9">
+					  		<input type="text" class="form-control" id="input_area" placeholder="请输入地区">
+					  	</div>
+					</div>
+					<!-- 地址 -->
+					<div class="form-group row">
+					  	<div class="col-2 text-right">
+					  		<label for="input_address">地址：</label>
+					  	</div>
+					  	<div class="col-9">
+					  		<input type="text" class="form-control" id="input_address" placeholder="请输入地址">
+					  	</div>
+					</div>
+					<!-- 电话 -->
+					<div class="form-group row">
+					  	<div class="col-2 text-right">
+					  		<label for="input_telephone">电话：</label>
+					  	</div>
+					  	<div class="col-9">
+					  		<input type="text" class="form-control" id="input_telephone" placeholder="请输入电话">
+					  	</div>
+					</div>
+					<!-- 顾客id -->
+					<div class="form-group row">
+					  	<div class="col-2 text-right">
+					  		<label for="input_customerId">顾客id：</label>
+					  	</div>
+					  	<div class="col-9">
+					  		<select name="" id="input_customerId" class="form-control">
+					  			
+					  		</select>
+					  	</div>
+					</div>
+				</form>
+				<!-- / 表单 -->     
+
+      		</div>
+      		<div class="modal-footer">
+        		<button type="button" class="btn btn-secondary" onclick="closeAddressModal()">取消</button>
+       		 	<button type="button" class="btn btn-primary" onclick="submitAddress()">保存</button>
+      		</div>
+    	</div>
+  	</div>
+</div>
+<!-- / 模态框 -->

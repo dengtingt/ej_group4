@@ -1,63 +1,79 @@
-html,body,.container {
+html,body,.box {
 	height: 100%;
 }
-.container {
-
+.box {
+	font-size: 14px;
 }
-.container > .left {
+.box > .left {
 	width: 220px;
-	background-color: #333;
+	background-color: #B2DFEE;
 	height: 100%;
 	float: left;
-	color: #ffffff;
+	color: #333;
 }
-.container > .left a {
-	color: #ffffff;
-	font-size: 14px;
+.box > .left a {
+	color: #333;
+	font-size: 16px;
 }
 .left > .title {
 	font-size: 20px;
 	font-weight: bold;
 	text-align: center;
-	line-height: 4em;
+	line-height: 4.5em;
 	border-bottom: 1px solid #ededed
 }
-.left >ul.left_nav {
-
+.left >ul.left_nav li .iconfont{
+	font-size: 18px;
+	margin-right: 8px;
+}
+.left >ul.left_nav li .iconfont:last-child{
+	float: right;
+	margin-left: 10px;
+}
+.left >ul.left_nav li .icon-waiter{
+	font-size: 22px;
 }
 .left >ul.left_nav > li{
 	text-align: center;
-	line-height: 3em;
-	border-bottom: 1px solid #ededed
-}
-.left >ul.left_nav > li.current{
-	background-color: #ededed;
-}
-.left >ul.left_nav > li.current a{
-	color: #333;
+	line-height: 3.5em;
+	border-bottom: 1px solid #fff;
 }
 
-.container > .right {
+
+.left >ul.left_nav > li.current{
+	background-color: #84C1FF;
+}
+.left >ul.left_nav > li.current a{
+	color: #fff;
+}
+.left >ul.left_nav > li.current i{
+	color: #fff;
+}
+
+.box > .right {
 	box-sizing: border-box;
 	height: 100%;
 	background-color: #ededed;
 	margin-left: 220px;
 	padding: 10px 20px;
 }
-.container > .right >.content {
+.box > .right >.content {
 	border-radius: 5px;
-	background-color: #ffffff;
+	background-color: #fff;
 	height: 100%;
 	padding: 1em;
 	box-sizing: border-box;
+	overflow-y: auto;
 }
-.container > .right >.content >.mb_nav{
+.box > .right >.content >.mb_nav{
 	border-bottom: 1px solid #ccc;
-	line-height: 2em;
-	margin-bottom: .5em;
+	line-height: 3em;
+	margin-bottom: 1em;
 }
 
-
+.mouseover {
+	background-color: #C4E1FF;
+}
 
 
 

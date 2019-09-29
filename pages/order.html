@@ -1,24 +1,179 @@
 <style>
-	
+	.btns {
+		margin: 10px 5px 10px;
+	}
+	.btn {
+		display: inline-block;
+		padding: .3em 1.2em;
+		border-radius: 3px;
+		border:1px solid #ccc;
+		color: #333;
+		cursor :pointer;
+	}
+
+	table.table {
+		box-sizing: border-box;
+		width: 100%;
+		border-collapse: collapse;
+	}
+	table.table td ,
+	table.table th {
+		border: 1px solid #ccc;
+		text-align: center;
+	}
+
+	.current {
+		background-color: #ECF5FF;
+	}
+
 </style>
+
 <script>
-	
+	var baseURL = "http://134.175.100.63:6677";
+	// 初始化数据
+	function initData(){
+		var url = "/order/findAll"
+		$.get(baseURL+url,function(response){
+			$("#order_tbl > tbody").empty();
+			response.data.forEach(function(item){
+				var newTr = $(`<tr>
+					<td><input type="checkbox" value="`+item.id+`"></td>
+					<td>`+item.customerId+`</td>
+					<td>`+item.addressId+`</td>
+					<td>`+item.orderTime+`</td>
+					<td>`+item.waiterId+`</td>
+					<td>`+item.total+`</td>
+					<td>
+						<a class="btn_del" href="javascript:void(0)" style="color:#40b6ff;margin-right:10px;">删除</a>
+						<a class="btn_info" href="javascript:void(0)" style="color:#40b6ff;">详情</a>
+					</td>
+				</tr>`);
+				$("#order_tbl > tbody").append(newTr);
+			});
+		});
+	}
+
+	$(function(){
+		// 初始化数据
+		initData();
+		// 为批量删除绑定事件处理函数
+		$("#btn_batch_del").click(function(){
+			var ids = $("input[type=checkbox]:checked").map(function(index,item){
+				return $(item).val()
+			})
+			.toArray();
+			var url = baseURL+"/order/batchDelete";
+			var data = "";
+			for(var index in ids){
+				var id = ids[index];
+				if(index == 0){
+					data += "ids="+id;
+				} else{
+					data +="&ids="+id;
+				}
+			}
+			$.post(url,data,function(result){
+				if(result.status == 200){
+					alert("删除成功");
+					initData();
+				} else{
+					alert(result.message);
+				}
+			})
+		})
+
+		$("#order_tbl > tbody").on("click","a",function(){
+			switch(this.className){
+				// 为删除按钮绑定事件处理函数
+				case "btn_del":
+					var id = $(this).parents("tr").find("input").val()
+					var url = baseURL+"/order/deleteById";
+					var data = "id="+id;
+					$.get(url,data,function(result){
+						alert(result.message);
+						initData();
+					})
+					break;
+
+				case "btn_info":
+					alert("详情");
+					break;
+			}
+		})
+	})
+
+	// 为保存按钮绑定事件处理函数
+	$(function(){
+		initData();
+		$(".forms > form").on("submit",function(){
+			var id = $(this).find("input[name=id]").val();
+			var realname = $(this).find("tbody > tr:nth-child(1) > td > input[name=realname]").val();
+			var password = $(this).find("tbody > tr:nth-child(2) > td > input[name=password]").val();
+			var telephone = $(this).find("tbody > tr:nth-child(3) > td > input[name=telephone]").val();
+
+			// 3. 与后台进行交互	
+			var url = baseURL+"/order/save";
+			var data;
+			if (id) {
+				data = "id="+id+"&realname="+realname+"&password="+password+"&telephone="+telephone;
+			} else{
+				data = "realname="+realname+"&password="+password+"&telephone="+telephone;
+			}
+
+			$.post(url,data,function(result){
+				alert(result.message);
+				initData();
+			})
+			
+		})
+	})
+
+
+	// 为添加按钮绑定事件处理函数
+	$(function(){
+		$(".btns > #btn_add").on("click",function(){
+			$(".forms input[name=id]").val('');
+			$(".forms form tbody tr input[type=text]").val('');
+			initData();
+		})
+
+		// 鼠标放上去当前按钮添加背景色
+		$(".btns").on("mouseover","div",function(){
+			$(this).addClass('current')
+		})
+		// 鼠标移开当前按钮失去背景色
+		$(".btns").on("mouseout",'div',function(){
+			$(this).removeClass('current')
+		})
+	})
+
+	$(function(){
+		// 鼠标放上去当前行添加背景色
+		$("table.table tbody").on("mouseover",'tr',function(){
+				$(this).addClass('current')
+		})
+		// 鼠标移开当前行失去背景色
+		$("table.table tbody").on("mouseout",'tr',function(){
+				$(this).removeClass('current')
+		})
+		
+	})
+
 </script>
 <div class="order">
 	<div class="btns">
-		<div class="btn">批量删除</div>
-		<div class="btn">导出</div>
+		<div class="btn" id="btn_batch_del">批量删除</div>
 	</div>
 	<table class="table" id="order_tbl">
 		<thead>
 			<tr>
-				<th width="10%"><input type="text"></th>
-				<th width="10%">顾客编号</th>
-				<th width="10%">地址编号</th>
-				<th width="20%">下单时间</th>
-				<th width="10%">员工编号</th>
-				<th width="10%">总计个数</th>
-				<th width="20%">操作</th>
+				<th><input type="checkbox"></th>
+				<th>顾客编号</th>
+				<th>地址编号</th>
+				<th>下单时间</th>
+				<th>员工编号</th>
+				<th>总计个数</th>
+				<th>操作</th>
 			</tr>
 		</thead>
 		<tbody>	

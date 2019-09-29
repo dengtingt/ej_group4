@@ -12,11 +12,6 @@
 		cursor :pointer;
 	}
 
-	.hidden {
-		display: none;
-	}
-
-
 	table.table {
 		box-sizing: border-box;
 		width: 100%;
@@ -32,83 +27,92 @@
 		background-color: #ECF5FF;
 	}
 
-	.none {
-		display: none;
-	}
 </style>
+
 
 <script>
 	// ======== 提前声明的代码
 	var baseURL = "http://134.175.100.63:6677";
 	// 初始化数据
 	function initData(){
-		var url = "/customer/findAll"
+		var url = "/comment/findAll"
 		$.get(baseURL+url,function(response){
-			$("#customer_tbl > tbody").empty();
+			$("#comment_tbl > tbody").empty();
 			response.data.forEach(function(item){
 				var newTr = $(`<tr>
 					<td><input type="checkbox" value="`+item.id+`"></td>
-					<td>`+item.realname+`</td>
-					<td>`+item.password+`</td>
-					<td><img src="`+item.photo+`" alt="" width="100px"/></td>
-					<td>`+item.telephone+`</td>
+					<td>`+item.orderId+`</td>
+					<td>`+item.content+`</td>
+					<td>`+item.commentTime+`</td>
 					<td>
 						<a class="btn_del" href="javascript:void(0)" style="color:#40b6ff;margin-right:10px;">删除</a>
 						<a class="btn_upd" href="javascript:void(0)" style="color:#40b6ff;">修改</a>
 					</td>
 				</tr>`);
-				$("#customer_tbl > tbody").append(newTr);
+				$("#comment_tbl > tbody").append(newTr);
 			});
 		});
 	}
 
+	// 初始化订单编号
+	function initorder(){
+		var url = baseURL + "/order/findAll";
+		$.get(url,function(result){
+			if(result.status === 200){
+				// 将栏目信息追加到下拉菜单中
+				result.data.forEach(function(item){
+					$("#input_orderId").append(`
+							<option value="`+item.id+`">`+item.id+`</option>
+						`);
+				});
+			}
+		});
+	}
+
 	// 关闭模态框
-	function closeCustomerModal(){
-		$("#customerModal").modal("hide");
+	function closeCommentModal(){
+		$("#commentModal").modal("hide");
 	}
 
 	// 为保存按钮绑定事件处理函数
-	function submitCustomer(){
+	function submitComment(){
 		// 1. 获取参数
-		var id = $("#customer_form input[name=id]").val();
-		var realname = $("#customer_form input[name=realname]").val();
-		var password = $("#customer_form input[name=password]").val();
-		var telephone = $("#customer_form input[name=telephone]").val();
+		var id = $("#comment_form input[name=id]").val();
+		var orderId = $("#comment_form input[name=orderId]").val();
+		var content = $("#comment_form input[name=content]").val();
+		var commentTime = $("#comment_form input[name=commentTime]").val();
 
 		// 2. 与后台进行交互	
-		var url = baseURL+"/customer/saveOrUpdate";
+		var url = baseURL+"/comment/saveOrUpdate";
 		var data;
 		if (id) {
 			data = {
 				id:id,
-				realname:realname,
-				password:password,
-				telephone:telephone
+				orderId:orderId,
+				content:content,
+				commentTime:commentTime
 			}
 		} else{
 			data = {
-				realname:realname,
-				password:password,
-				telephone:telephone
+				orderId:orderId,
+				content:content,
+				commentTime:commentTime
 			}
 		}
-
 		$.post(url,data,function(result){
 			if(result.status === 200){
-				closeCustomerModal();
-				alert(result.message);
+				closeCommentModal();
 				initData();
 			} else {
 				alert(result.message);
 			}
 		});
-		$('#customerModal').modal('hide');
+		$('#commentModal').modal('hide');
+		
 	}
-
 
 	// ==========文档加载后执行
 	$(function(){
-		// 初始化加载
 		initData();
 		// 为批量删除绑定事件处理函数
 		$("#btn_batch_del").click(function(){
@@ -116,7 +120,7 @@
 				return $(item).val()
 			})
 			.toArray();
-			var url = baseURL+"/customer/batchDelete";
+			var url = baseURL+"/comment/batchDelete";
 			var data = "";
 			for(var index in ids){
 				var id = ids[index];
@@ -136,13 +140,13 @@
 			})
 		})
 
-		// 为删除按钮/修改按钮绑定事件
-		$("#customer_tbl > tbody").on("click","a",function(){
-			switch(this.className){
 
+		$("#comment_tbl > tbody").on("click","a",function(){
+			switch(this.className){
+				// 为删除按钮绑定事件处理函数
 				case "btn_del":
 					var id = $(this).parents("tr").find("input").val()
-					var url = baseURL+"/customer/deleteById";
+					var url = baseURL+"/comment/deleteById";
 					var data = "id="+id;
 					$.get(url,data,function(result){
 						alert(result.message);
@@ -151,43 +155,44 @@
 					break;
 
 				case "btn_upd":
-					$("#customerModal").modal("show");
+					$("#commentModal").modal("show");
 					var id = $(this).parents("tr").find("input").val();
-					var realname = $(this).parents("tr").find("td:nth-child(2)").text();
-					var password = $(this).parents("tr").find("td:nth-child(3)").text();
-					var telephone = $(this).parents("tr").find("td:nth-child(5)").text();
+					var orderId = $(this).parents("tr").find("td:nth-child(2)").text();
+					var content = $(this).parents("tr").find("td:nth-child(3)").text();
+					var commentTime = $(this).parents("tr").find("td:nth-child(4)").text();
 
 					// 输出获取到的值
-					$("#customer_form input[name=id]").val(id);
-					$("#customer_form input[name=realname]").val(realname);
-					$("#customer_form input[name=password]").val(password);
-					$("#customer_form input[name=telephone]").val(telephone);
+					$("input[name=orderId]").val(orderId);
+					$("input[name=content]").val(content);
+					$("input[name=commentTime]").val(commentTime);
+					$("input[name=id]").val(id);
 					break;
 
 				case "btn_info":
-					$("#wrapper").load("./pages/info.html");
+					alert("详情");
 					break;
 			}
 		})
-
 	})
-
-
 
 	// 为添加按钮绑定事件处理函数
 	$(function(){
 		// 1. 初始化数据
 		initData();
-
+		initorder();
 		// 2. 为添加按钮绑定事件处理函数
-		$("#btn_add_customer").on("click",function(){
-			$('#customerModal').modal("show");
-			$("#customer_form input[name=id]").val('');
+		$("#btn_add_comment").on("click",function(){
+
+
+			$("#commentModal").modal("show");
+			$("#comment_form input[name=id]").val('');
 		});
 		// 3. 监听模态框的关闭
-		$('#customerModal').on('hidden.bs.modal',function(e){
+		$('#commentModal').on('hidden.bs.modal',function(e){
 			$(this).find("form")[0].reset();
 		});
+		
+
 
 		// 鼠标放上去当前按钮添加背景色
 		$(".btns").on("mouseover","div",function(){
@@ -198,6 +203,7 @@
 			$(this).removeClass('current')
 		})
 	})
+
 
 	$(function(){
 		// 鼠标放上去当前行添加背景色
@@ -210,109 +216,87 @@
 		})
 		
 	})
-
 </script>
 
-
-<!-- 容器 -->
-<div class="customer">
-	<!-- 按钮 -->
+<div class="comment">
 	<div class="btns">
-		<div class="btn" id="btn_add_customer">添加</div>
+		<div class="btn" id="btn_add_comment">添加</div>
 		<div class="btn" id="btn_batch_del">批量删除</div>
 	</div>
-	<!-- /按钮 -->
-
-	<!-- 表格 -->
-	<table class="table" id="customer_tbl">
+	<table class="table" id="comment_tbl">
 		<thead>
 			<tr>
-				<th>编号</th>
-				<th>姓名</th>
-				<th>密码</th>
-				<th>头像</th>
-				<th>手机</th>
+				<th><input type="checkbox"></th>
+				<th>订单号</th>
+				<th>内容</th>
+				<th>评论时间</th>
 				<th>操作</th>
 			</tr>
 		</thead>
-		<tbody>
-			
+		<tbody>	
+
 		</tbody>
 	</table>
-	<!-- /表格 -->
 </div>
-<!-- /容器 -->
 
 <!-- 模态框 -->
-<div class="modal fade" id="customerModal" tabindex="-1">
+<div class="modal fade" id="commentModal" tabindex="-1">
   	<div class="modal-dialog modal-lg" role="document">
     	<div class="modal-content">
       		<div class="modal-header">
-        		<h5 class="modal-title" id="exampleModalLabel">添加顾客信息</h5>
-        		<button type="button" class="close" onclick="closeCustomerModal()">
+        		<h5 class="modal-title" id="exampleModalLabel">添加评论信息</h5>
+        		<button type="button" class="close" onclick="closeCommentModal()">
           			<span>&times;</span>
         		</button>
       		</div>
       		<div class="modal-body">
-  				<!-- 表单 -->
-				<form action="/register" id="customer_form">
+  			<!-- 表单 -->
+				<form action="/register" id="comment_form">
 					<input type="hidden" name="id">
-					<!-- 姓名 -->
+					<!-- 订单编号 -->
 					<div class="form-group row">
 						<div class="col-2 text-right">
-							<label for="input_name">姓名：</label>
+							<label for="input_orderId">订单编号：</label>
 						</div>
 						<div class="col-9">
-							<input id="input_name" name="realname" type="text" class="form-control" placeholder="请输入顾客姓名">
+							<select name="orderId" id="input_orderId" class="form-control" style="width: 50%">	
+							</select>
 						</div>
 					</div>
-					<!-- / 姓名 -->
+					<!-- / 订单编号 -->
 			
-					<!-- 密码 -->
+					<!-- 内容 -->
 					<div class="form-group row">
 						<div class="col-2 text-right">
-							<label for="input_password">密码：</label>
+							<label for="input_content">内容：</label>
 						</div>
 						<div class="col-9">
-							<input id="input_password" name="password" type="text" class="form-control" placeholder="请输入密码">
+							<input id="input_content" name="content" type="text" class="form-control" placeholder="请输入评论内容">
 						</div>
 					</div>
-					<!-- / 密码 -->
+					<!-- / 内容 -->
 
-					<!-- 头像 -->
+					<!-- 评论时间 -->
 					<div class="form-group row">
 						<div class="col-2 text-right">
-							<label for="input_telephone">头像：</label>
+							<label for="input_commentTime">评论时间：</label>
 						</div>
 						<div class="col-9">
-							<input id="input_telephone" name="telephone" type="text" class="form-control" placeholder="请输入图片地址">
+							<input id="input_commentTime" name="commentTime" type="text" class="form-control" placeholder="请输入评论时间">
 						</div>
 					</div>
-					<!-- / 头像 -->
-
-					<!-- 手机号 -->
-					<div class="form-group row">
-						<div class="col-2 text-right">
-							<label for="input_telephone">手机号：</label>
-						</div>
-						<div class="col-9">
-							<input id="input_telephone" name="telephone" type="text" class="form-control" placeholder="请输入手机号">
-						</div>
-					</div>
-					<!-- / 手机号 -->
-
+					<!-- / 评论时间 -->
+			
 				</form>
 				<!-- / 表单 -->     
 
       		</div>
       		<div class="modal-footer">
-        		<button type="button" class="btn btn-secondary" onclick="closeCustomerModal()">取消</button>
-       		 	<button type="button" class="btn btn-primary" onclick="submitCustomer()">保存</button>
+        		<button type="button" class="btn btn-secondary" onclick="closeCommentModal()">取消</button>
+       		 	<button type="button" class="btn btn-primary" onclick="submitComment()">保存</button>
       		</div>
     	</div>
   	</div>
 </div>
-<!-- /模态框 -->
-
-
+<!-- / 模态框 -->
 

@@ -1,7 +1,306 @@
-<style></style>
+
+<style>
+	.btns {
+		margin: 10px 5px 10px;
+	}
+	.btn {
+		display: inline-block;
+		padding: .3em 1.2em;
+		border-radius: 3px;
+		border:1px solid #ccc;
+		color: #333;
+		cursor :pointer;
+	}
+
+	.hidden {
+		display: none;
+	}
+
+
+	table.table {
+		box-sizing: border-box;
+		width: 100%;
+		border-collapse: collapse;
+	}
+	table.table td ,
+	table.table th {
+		border: 1px solid #ccc;
+		text-align: center;
+	}
+
+	.current {
+		background-color: #ECF5FF;
+	}
+
+	.none {
+		display: none;
+	}
+</style>
+
 <script>
-	
+	// ======== 提前声明的代码
+	var baseURL = "http://134.175.100.63:6677";
+	// 初始化数据
+	function initData(){
+		var url = "/waiter/findAll"
+		$.get(baseURL+url,function(response){
+			$("#waiter_tbl > tbody").empty();
+			response.data.forEach(function(item){
+				var newTr = $(`<tr>
+					<td><input type="checkbox" value="`+item.id+`"></td>
+					<td>`+item.realname+`</td>
+					<td>`+item.password+`</td>
+					<td><img src="`+item.photo+`" alt="" width="100px"/></td>
+					<td>`+item.telephone+`</td>
+					<td>
+						<a class="btn_del" href="javascript:void(0)" style="color:#40b6ff;margin-right:10px;">删除</a>
+						<a class="btn_upd" href="javascript:void(0)" style="color:#40b6ff;">修改</a>
+					</td>
+				</tr>`);
+				$("#waiter_tbl > tbody").append(newTr);
+			});
+		});
+	}
+
+	// 关闭模态框
+	function closeWaiterModal(){
+		$("#waiterModal").modal("hide");
+	}
+
+	// 为保存按钮绑定事件处理函数
+	function submitWaiter(){
+		// 1. 获取参数
+		var id = $("#waiter_form input[name=id]").val();
+		var realname = $("#waiter_form input[name=realname]").val();
+		var password = $("#waiter_form input[name=password]").val();
+		var telephone = $("#waiter_form input[name=telephone]").val();
+
+		// 2. 与后台进行交互	
+		var url = baseURL+"/waiter/saveOrUpdate";
+		var data;
+		if (id) {
+			data = {
+				id:id,
+				realname:realname,
+				password:password,
+				telephone:telephone
+			}
+		} else{
+			data = {
+				realname:realname,
+				password:password,
+				telephone:telephone
+			}
+		}
+
+		$.post(url,data,function(result){
+			if(result.status === 200){
+				closeWaiterModal();
+				alert(result.message);
+				initData();
+			} else {
+				alert(result.message);
+			}
+		});
+		$('#waiterModal').modal('hide');
+	}
+
+
+	// ==========文档加载后执行
+	$(function(){
+		// 初始化加载
+		initData();
+		// 为批量删除绑定事件处理函数
+		$("#btn_batch_del").click(function(){
+			var ids = $("input[type=checkbox]:checked").map(function(index,item){
+				return $(item).val()
+			}).toArray();
+			var url = baseURL+"/waiter/batchDelete";
+			var data = "";
+			for(var index in ids){
+				var id = ids[index];
+				if(index == 0){
+					data += "ids="+id;
+				} else{
+					data +="&ids="+id;
+				}
+			}
+			$.post(url,data,function(result){
+				if(result.status == 200){
+					alert("删除成功");
+					initData();
+				} else{
+					alert(result.message);
+				}
+			})
+		})
+
+		// 为删除按钮/修改按钮绑定事件
+		$("#waiter_tbl > tbody").on("click","a",function(){
+			switch(this.className){
+
+				case "btn_del":
+					var id = $(this).parents("tr").find("input").val()
+					var url = baseURL+"/waiter/deleteById";
+					var data = "id="+id;
+					$.get(url,data,function(result){
+						alert(result.message);
+						initData();
+					})
+					break;
+
+				case "btn_upd":
+					$("#waiterModal").modal("show");
+					var id = $(this).parents("tr").find("input").val();
+					var realname = $(this).parents("tr").find("td:nth-child(2)").text();
+					var password = $(this).parents("tr").find("td:nth-child(3)").text();
+					var telephone = $(this).parents("tr").find("td:nth-child(5)").text();
+
+					// 输出获取到的值
+					$("#waiter_form input[name=id]").val(id);
+					$("#waiter_form input[name=realname]").val(realname);
+					$("#waiter_form input[name=password]").val(password);
+					$("#waiter_form input[name=telephone]").val(telephone);
+					break;
+
+				case "btn_info":
+					$("#wrapper").load("./info.html");
+					break;
+			}
+		})
+
+	})
+
+
+
+	// 为添加按钮绑定事件处理函数
+	$(function(){
+		// 1. 初始化数据
+		initData();
+
+		// 2. 为添加按钮绑定事件处理函数
+		$("#btn_add_waiter").on("click",function(){
+			$('#waiterModal').modal("show");
+			$("#waiter_form input[name=id]").val('');
+		});
+		// 3. 监听模态框的关闭
+		$('#waiterModal').on('hidden.bs.modal',function(e){
+			$(this).find("form")[0].reset();
+		});
+
+		// 鼠标放上去当前按钮添加背景色
+		$(".btns").on("mouseover","div",function(){
+			$(this).addClass('current')
+		})
+		// 鼠标移开当前按钮失去背景色
+		$(".btns").on("mouseout",'div',function(){
+			$(this).removeClass('current')
+		})
+	})
+
+	$(function(){
+		// 鼠标放上去当前行添加背景色
+		$("table.table tbody").on("mouseover",'tr',function(){
+				$(this).addClass('current')
+		})
+		// 鼠标移开当前行失去背景色
+		$("table.table tbody").on("mouseout",'tr',function(){
+				$(this).removeClass('current')
+		})
+		
+	})
+
 </script>
+
+
+<!-- 容器 -->
 <div class="waiter">
-	员工管理
+	<!-- 按钮 -->
+	<div class="btns">
+		<div class="btn" id="btn_add_waiter">添加</div>
+		<div class="btn" id="btn_batch_del">批量删除</div>
+	</div>
+	<!-- /按钮 -->
+
+	<!-- 表格 -->
+	<table class="table" id="waiter_tbl">
+		<thead>
+			<tr>
+				<th>编号</th>
+				<th>姓名</th>
+				<th>密码</th>
+				<th>头像</th>
+				<th>手机</th>
+				<th>操作</th>
+			</tr>
+		</thead>
+		<tbody>
+			
+		</tbody>
+	</table>
+	<!-- /表格 -->
 </div>
+<!-- /容器 -->
+
+<!-- 模态框 -->
+<div class="modal fade" id="waiterModal" tabindex="-1">
+  	<div class="modal-dialog modal-lg" role="document">
+    	<div class="modal-content">
+      		<div class="modal-header">
+        		<h5 class="modal-title" id="exampleModalLabel">添加员工信息</h5>
+        		<button type="button" class="close" onclick="closeWaiterModal()">
+          			<span>&times;</span>
+        		</button>
+      		</div>
+      		<div class="modal-body">
+  				<!-- 表单 -->
+				<form action="/register" id="waiter_form">
+					<input type="hidden" name="id">
+					<!-- 姓名 -->
+					<div class="form-group row">
+						<div class="col-2 text-right">
+							<label for="input_name">姓名：</label>
+						</div>
+						<div class="col-9">
+							<input id="input_name" name="realname" type="text" class="form-control" placeholder="请输入员工姓名">
+						</div>
+					</div>
+					<!-- / 姓名 -->
+			
+					<!-- 密码 -->
+					<div class="form-group row">
+						<div class="col-2 text-right">
+							<label for="input_password">密码：</label>
+						</div>
+						<div class="col-9">
+							<input id="input_password" name="password" type="text" class="form-control" placeholder="请输入密码">
+						</div>
+					</div>
+					<!-- / 密码 -->
+
+					<!-- 手机号 -->
+					<div class="form-group row">
+						<div class="col-2 text-right">
+							<label for="input_telephone">手机号：</label>
+						</div>
+						<div class="col-9">
+							<input id="input_telephone" name="telephone" type="text" class="form-control" placeholder="请输入手机号">
+						</div>
+					</div>
+					<!-- / 手机号 -->
+
+				</form>
+				<!-- / 表单 -->     
+
+      		</div>
+      		<div class="modal-footer">
+        		<button type="button" class="btn btn-secondary" onclick="closeWaiterModal()">取消</button>
+       		 	<button type="button" class="btn btn-primary" onclick="submitWaiter()">保存</button>
+      		</div>
+    	</div>
+  	</div>
+</div>
+<!-- /模态框 -->
+
+
+
