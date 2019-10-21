@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 
 <style>
 	.btns {
@@ -33,7 +33,7 @@
 
 <script>
 	// ======== 提前声明的代码
-	var baseURL = "http://134.175.100.63:6677";
+	var baseURL = "http://39.105.178.10:6677";
 	// 初始化数据
 	function initData(){
 		var url = "/category/findAll"
@@ -117,6 +117,7 @@
 	// ==========文档加载后执行
 	$(function(){
 		initData();
+		initCategory();
 		// 为批量删除绑定事件处理函数
 		$("#btn_batch_del").click(function(){
 			var ids = $("input[type=checkbox]:checked").map(function(index,item){
@@ -170,18 +171,9 @@
 					$("#category_form input[name=num]").val(num);
 					break;
 
-				case "btn_info":
-					alert("详情");
-					break;
 			}
 		})
-	})
 
-
-	// 为添加按钮绑定事件处理函数
-	$(function(){
-		initData();
-		initCategory();
 		$("#btn_add_category").on("click",function(){
 			$("#categoryModal").modal("show");
 			$("#category_form input[name=id]").val('');
@@ -200,9 +192,7 @@
 		$(".btns").on("mouseout",'div',function(){
 			$(this).removeClass('current')
 		})
-	})
 
-	$(function(){
 		// 鼠标放上去当前行添加背景色
 		$("table.table tbody").on("mouseover",'tr',function(){
 				$(this).addClass('current')
@@ -211,8 +201,8 @@
 		$("table.table tbody").on("mouseout",'tr',function(){
 				$(this).removeClass('current')
 		})
-		
 	})
+
 </script>
 
 <!-- 容器 -->
@@ -305,8 +295,3 @@
 <!-- / 模态框 -->
 
 
-=======
-<div class="category">
-	分类管理
-</div>
->>>>>>> 5a8d8b8a8d9ba7a7be46d40344ce3f2568d32b6e

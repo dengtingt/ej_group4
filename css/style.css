@@ -1,11 +1,8 @@
 html,body,.box {
 	height: 100%;
 }
-<<<<<<< HEAD
+
 .box {
-=======
-.container {
->>>>>>> 5a8d8b8a8d9ba7a7be46d40344ce3f2568d32b6e
 	font-size: 14px;
 }
 .box > .left {
@@ -15,13 +12,12 @@ html,body,.box {
 	float: left;
 	color: #333;
 }
-<<<<<<< HEAD
+
 .box > .left a {
 	color: #333;
-=======
+}
 .container > .left a {
 	color: #ffffff;
->>>>>>> 5a8d8b8a8d9ba7a7be46d40344ce3f2568d32b6e
 	font-size: 16px;
 }
 .left > .title {
@@ -34,7 +30,7 @@ html,body,.box {
 .left >ul.left_nav li .iconfont{
 	font-size: 18px;
 	margin-right: 8px;
-<<<<<<< HEAD
+
 }
 .left >ul.left_nav li .iconfont:last-child{
 	float: right;
@@ -42,17 +38,11 @@ html,body,.box {
 }
 .left >ul.left_nav li .icon-waiter{
 	font-size: 22px;
-=======
->>>>>>> 5a8d8b8a8d9ba7a7be46d40344ce3f2568d32b6e
 }
 .left >ul.left_nav > li{
 	text-align: center;
 	line-height: 3.5em;
-<<<<<<< HEAD
 	border-bottom: 1px solid #fff;
-=======
-	border-bottom: 1px solid #666;
->>>>>>> 5a8d8b8a8d9ba7a7be46d40344ce3f2568d32b6e
 }
 
 
@@ -60,18 +50,12 @@ html,body,.box {
 	background-color: #84C1FF;
 }
 .left >ul.left_nav > li.current a{
-<<<<<<< HEAD
 	color: #fff;
 }
 .left >ul.left_nav > li.current i{
 	color: #fff;
-=======
-	color: #666;
 }
-.left >ul.left_nav > li.current i{
-	color: #666;
->>>>>>> 5a8d8b8a8d9ba7a7be46d40344ce3f2568d32b6e
-}
+
 
 .box > .right {
 	box-sizing: border-box;
@@ -95,11 +79,7 @@ html,body,.box {
 }
 
 .mouseover {
-<<<<<<< HEAD
-	background-color: #C4E1FF;
-=======
-	background-color: #666;
->>>>>>> 5a8d8b8a8d9ba7a7be46d40344ce3f2568d32b6e
+	background-color: #ECF5FF;
 }
 
 

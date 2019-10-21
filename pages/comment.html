@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 
 <style>
 	.btns {
@@ -33,7 +32,7 @@
 
 <script>
 	// ======== 提前声明的代码
-	var baseURL = "http://134.175.100.63:6677";
+	var baseURL = "http://39.105.178.10:6677";
 	// 初始化数据
 	function initData(){
 		var url = "/comment/findAll"
@@ -79,7 +78,7 @@
 	function submitComment(){
 		// 1. 获取参数
 		var id = $("#comment_form input[name=id]").val();
-		var orderId = $("#comment_form input[name=orderId]").val();
+		var orderId = $("#comment_form select[name=orderId]").val();
 		var content = $("#comment_form input[name=content]").val();
 		var commentTime = $("#comment_form input[name=commentTime]").val();
 
@@ -115,6 +114,8 @@
 	// ==========文档加载后执行
 	$(function(){
 		initData();
+		initorder();
+
 		// 为批量删除绑定事件处理函数
 		$("#btn_batch_del").click(function(){
 			var ids = $("input[type=checkbox]:checked").map(function(index,item){
@@ -163,7 +164,7 @@
 					var commentTime = $(this).parents("tr").find("td:nth-child(4)").text();
 
 					// 输出获取到的值
-					$("input[name=orderId]").val(orderId);
+					$("select[name=orderId]").val(orderId);
 					$("input[name=content]").val(content);
 					$("input[name=commentTime]").val(commentTime);
 					$("input[name=id]").val(id);
@@ -174,17 +175,10 @@
 					break;
 			}
 		})
-	})
 
-	// 为添加按钮绑定事件处理函数
-	$(function(){
-		// 1. 初始化数据
-		initData();
-		initorder();
+
 		// 2. 为添加按钮绑定事件处理函数
 		$("#btn_add_comment").on("click",function(){
-
-
 			$("#commentModal").modal("show");
 			$("#comment_form input[name=id]").val('');
 		});
@@ -203,10 +197,7 @@
 		$(".btns").on("mouseout",'div',function(){
 			$(this).removeClass('current')
 		})
-	})
 
-
-	$(function(){
 		// 鼠标放上去当前行添加背景色
 		$("table.table tbody").on("mouseover",'tr',function(){
 				$(this).addClass('current')
@@ -215,8 +206,9 @@
 		$("table.table tbody").on("mouseout",'tr',function(){
 				$(this).removeClass('current')
 		})
-		
 	})
+
+
 </script>
 
 <div class="comment">
@@ -301,8 +293,3 @@
 </div>
 <!-- / 模态框 -->
 
-=======
-<div class="comment">
-	评价管理
-</div>
->>>>>>> 5a8d8b8a8d9ba7a7be46d40344ce3f2568d32b6e

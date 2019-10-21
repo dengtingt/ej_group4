@@ -44,7 +44,7 @@
 </style>
 <script>
 	// ======== 提前声明的代码
-	var baseURL = "http://134.175.100.63:6677";
+	var baseURL = "http://39.105.178.10:6677";
 
 	// 初始化数据
 	function loadData(){
@@ -116,7 +116,7 @@
 				*第二个item.id放在option中间是为了显示
 				*/
 				var newOption = $(`
-					<option value="`+item.id+`">`+item.id+`</option>
+					<option value="`+item.id+`">`+item.realname+`</option>
 				`);
 				// 将顾客id追加到模态框的下拉框中
 				$('#input_customerId').append(newOption);
@@ -422,7 +422,7 @@
 					<!-- 顾客id -->
 					<div class="form-group row">
 					  	<div class="col-2 text-right">
-					  		<label for="input_customerId">顾客id：</label>
+					  		<label for="input_customerId">顾客：</label>
 					  	</div>
 					  	<div class="col-9">
 					  		<select name="" id="input_customerId" class="form-control">

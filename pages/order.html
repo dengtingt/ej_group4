@@ -29,7 +29,7 @@
 </style>
 
 <script>
-	var baseURL = "http://134.175.100.63:6677";
+	var baseURL = "http://39.105.178.10:6677";
 	// 初始化数据
 	function initData(){
 		var url = "/order/findAll"
@@ -43,6 +43,7 @@
 					<td>`+item.orderTime+`</td>
 					<td>`+item.waiterId+`</td>
 					<td>`+item.total+`</td>
+					<td>`+item.status+`</td>
 					<td>
 						<a class="btn_del" href="javascript:void(0)" style="color:#40b6ff;margin-right:10px;">删除</a>
 						<a class="btn_info" href="javascript:void(0)" style="color:#40b6ff;">详情</a>
@@ -100,42 +101,7 @@
 					break;
 			}
 		})
-	})
 
-	// 为保存按钮绑定事件处理函数
-	$(function(){
-		initData();
-		$(".forms > form").on("submit",function(){
-			var id = $(this).find("input[name=id]").val();
-			var realname = $(this).find("tbody > tr:nth-child(1) > td > input[name=realname]").val();
-			var password = $(this).find("tbody > tr:nth-child(2) > td > input[name=password]").val();
-			var telephone = $(this).find("tbody > tr:nth-child(3) > td > input[name=telephone]").val();
-
-			// 3. 与后台进行交互	
-			var url = baseURL+"/order/save";
-			var data;
-			if (id) {
-				data = "id="+id+"&realname="+realname+"&password="+password+"&telephone="+telephone;
-			} else{
-				data = "realname="+realname+"&password="+password+"&telephone="+telephone;
-			}
-
-			$.post(url,data,function(result){
-				alert(result.message);
-				initData();
-			})
-			
-		})
-	})
-
-
-	// 为添加按钮绑定事件处理函数
-	$(function(){
-		$(".btns > #btn_add").on("click",function(){
-			$(".forms input[name=id]").val('');
-			$(".forms form tbody tr input[type=text]").val('');
-			initData();
-		})
 
 		// 鼠标放上去当前按钮添加背景色
 		$(".btns").on("mouseover","div",function(){
@@ -145,9 +111,7 @@
 		$(".btns").on("mouseout",'div',function(){
 			$(this).removeClass('current')
 		})
-	})
 
-	$(function(){
 		// 鼠标放上去当前行添加背景色
 		$("table.table tbody").on("mouseover",'tr',function(){
 				$(this).addClass('current')
@@ -156,7 +120,6 @@
 		$("table.table tbody").on("mouseout",'tr',function(){
 				$(this).removeClass('current')
 		})
-		
 	})
 
 </script>
@@ -173,6 +136,7 @@
 				<th>下单时间</th>
 				<th>员工编号</th>
 				<th>总计个数</th>
+				<th>状态</th>
 				<th>操作</th>
 			</tr>
 		</thead>

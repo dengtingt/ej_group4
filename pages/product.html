@@ -33,7 +33,7 @@
 
 <script>
 	// ======== 提前声明的代码
-	var baseURL = "http://134.175.100.63:6677";
+	var baseURL = "http://39.105.178.10:6677";
 
 	// 初始化数据
 	function initData(){
@@ -47,7 +47,6 @@
 					<td>`+item.description+`</td>
 					<td>`+item.price+`</td>
 					<td>`+item.categoryId+`</td>
-					<td><img src="`+item.photo+`" alt="" width="100px"/></td>
 					<td>
 						<a class="btn_del" href="javascript:void(0)" style="color:#40b6ff;margin-right:10px;">删除</a>
 						<a class="btn_upd" href="javascript:void(0)" style="color:#40b6ff;">修改</a>
@@ -87,7 +86,7 @@
 		var name = $("#product_form input[name=name]").val();
 		var price = $("#product_form input[name=price]").val();
 		var categoryId = $("#product_form select[name=categoryId]").val();
-		var description = $("#product_form textarea[name=description]").val().trim();
+		var description = $("#product_form textarea[name=description]").val();
 		// 2. ajax
 		var url = baseURL+"/product/saveOrUpdate"
 		if (id) {
@@ -169,21 +168,13 @@
 
 					// 将获取到的值在模态框中显示
 					$("#product_form input[name=name]").val(name);
-					$("#product_form input[name=description]").val(description);
+					$("#product_form textarea[name=description]").val(description);
 					$("#product_form input[name=price]").val(price);
 					$("#product_form input[name=id]").val(id);
 					break;
 
 			}
 		})
-	})
-
-
-
-	// 为添加按钮绑定事件处理函数
-	$(function(){
-		// 1. 初始化数据
-		initData();
 
 		// 2. 为添加按钮绑定事件处理函数
 		$("#btn_add_product").on("click",function(){
@@ -208,10 +199,9 @@
 		$(".btns").on("mouseout",'div',function(){
 			$(this).removeClass('current')
 		})
-	})
 
 
-	$(function(){
+
 		// 鼠标放上去当前行添加背景色
 		$("table.table tbody").on("mouseover",'tr',function(){
 				$(this).addClass('current')
@@ -220,8 +210,8 @@
 		$("table.table tbody").on("mouseout",'tr',function(){
 				$(this).removeClass('current')
 		})
-		
 	})
+
 
 </script>
 
@@ -242,7 +232,6 @@
 				<th>商品描述</th>
 				<th>价格</th>
 				<th>所属分类</th>
-				<th>照片</th>
 				<th>操作</th>
 			</tr>
 		</thead>
@@ -298,7 +287,7 @@
 			
 					<!-- 简介 -->
 					<div class="form-group row">
-						<label for="input_description" class="col-2 text-right">简介：</label>
+						<label for="input_description" class="col-2 text-right">商品描述：</label>
 						<div class="col-9" >
 							<textarea id="input_description" name="description" class="form-control" placeholder="请输入产品简介">
 							</textarea>
